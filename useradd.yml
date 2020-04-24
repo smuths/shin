@@ -1,0 +1,14 @@
+---
+- name: add user
+  hosts: all
+  become: true
+  vars:
+    - new_userid: atest
+  tasks:
+    - name: check exist user
+      shell: cat /etc/passwd | grep {{ new_userid }} || echo "NULL"
+      register: rval
+
+    - name: add user
+      shell: /sbin/useradd {{ new_userid }}
+      when: rval.stdout == 'NULL'
